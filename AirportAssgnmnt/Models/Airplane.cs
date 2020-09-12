@@ -2,40 +2,21 @@
 
 namespace AirportAssgnmnt.Models
 {
-    public class Airplane
+    public abstract class Airplane
     {
-        public string PlaneIdentification { get; set; }
-        public bool IsCurrentlyFlying { get; set; }
-        public int MaxNumOfPassengers { get; set; }
-        private int currentNumOfPassengers;
+        public string PlaneIdentification { get; internal set; }        
+        public bool IsCurrentlyFlying { get; private set; }
+
+        public AirplaneTypes Type { get; protected set; }
 
         public Airplane(string planeIdentification)
         {
             PlaneIdentification = planeIdentification;
-            MaxNumOfPassengers = 100;
-
         }
-        public void LoadPassengers(int numOfPassengers)
-        {
-            if (currentNumOfPassengers + numOfPassengers > MaxNumOfPassengers)
-            {
-                var loaded = MaxNumOfPassengers - currentNumOfPassengers;
-                var unloaded = numOfPassengers - loaded;
-                Console.WriteLine($"Airplane {PlaneIdentification} charges {loaded} passengers, {unloaded} do not fit.");
-                currentNumOfPassengers = MaxNumOfPassengers;
-            }
-            else
-            {
-                currentNumOfPassengers += numOfPassengers;
-                Console.WriteLine($"Airplane {PlaneIdentification} loads {numOfPassengers} passengers.");
-            }
-        }
-
-        public void UnloadPassengers()
-        {
-            Console.WriteLine($"Airplane {PlaneIdentification} unloads {currentNumOfPassengers} passengers.");
-            currentNumOfPassengers = 0;
-        }
+        public abstract void Load(int amount);
+        public abstract void Unload();
+        public abstract bool HasRooms();
+        public abstract int GetRooms();
 
         public void TakeOff()
         {
@@ -49,7 +30,6 @@ namespace AirportAssgnmnt.Models
                 Console.WriteLine($"Airplane {PlaneIdentification} takes off.");
             }
         }
-
         public void Land()
         {
             if (!IsCurrentlyFlying)
@@ -62,21 +42,9 @@ namespace AirportAssgnmnt.Models
                 Console.WriteLine($"Airplane {PlaneIdentification} lands.");
             }
         }
-        public bool HasRooms()
+        public override string ToString()
         {
-            if (currentNumOfPassengers < MaxNumOfPassengers)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public int GetRooms()
-        {
-            return MaxNumOfPassengers - currentNumOfPassengers;
+            return $"{Type} plane {PlaneIdentification}";
         }
     }
 }
