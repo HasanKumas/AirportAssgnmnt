@@ -17,7 +17,8 @@ namespace AirportAssgnmnt.Models
         public abstract void Unload();
         public abstract bool HasRooms();
         public abstract int GetRooms();
-
+        /*checks if the airplane is currently flying and 
+         * performs take off action if not flying*/
         public void TakeOff()
         {
             if (IsCurrentlyFlying)
@@ -30,6 +31,8 @@ namespace AirportAssgnmnt.Models
                 Console.WriteLine($"Airplane {PlaneIdentification} takes off.");
             }
         }
+        /*checks if the airplane is currently flying and 
+        * performs land action if flying*/
         public void Land()
         {
             if (!IsCurrentlyFlying)
@@ -42,6 +45,8 @@ namespace AirportAssgnmnt.Models
                 Console.WriteLine($"Airplane {PlaneIdentification} lands.");
             }
         }
+        /*overrides the ToString method to
+         * write airplane objects directly*/
         public override string ToString()
         {
             return $"{Type} plane {PlaneIdentification}";

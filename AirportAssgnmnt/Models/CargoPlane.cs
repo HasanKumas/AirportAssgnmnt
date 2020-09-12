@@ -4,16 +4,19 @@ using System.Text;
 
 namespace AirportAssgnmnt.Models
 {
-    class CargoPlane : Airplane, Propellor
+    public class CargoPlane : Airplane, Propellor
     {
         public int MaxAmountOfCargo { get; private set; }
-        private int currentAmountOfCargo;
+        public int CurrentAmountOfCargo { get; private set; }
 
         public CargoPlane(string planeIdentification) : base(planeIdentification)
         {
             Type = AirplaneTypes.CARGO;
             MaxAmountOfCargo = 20;
         }
+        /*loads the plane with the specified amount by 
+         *checking if the current load exceeds the max load
+         *and the plane has landed*/
         public override void Load(int amountOfCargo)
         {
             if(IsCurrentlyFlying)
@@ -22,20 +25,20 @@ namespace AirportAssgnmnt.Models
                 return;
             }
 
-            if (currentAmountOfCargo + amountOfCargo > MaxAmountOfCargo)
+            if (CurrentAmountOfCargo + amountOfCargo > MaxAmountOfCargo)
             {
-                var loaded = MaxAmountOfCargo - currentAmountOfCargo;
+                var loaded = MaxAmountOfCargo - CurrentAmountOfCargo;
                 var unloaded = amountOfCargo - loaded;
                 Console.WriteLine($"Airplane {PlaneIdentification} charges {loaded} tons cargo, {unloaded} tons do not fit.");
-                currentAmountOfCargo = MaxAmountOfCargo;
+                CurrentAmountOfCargo = MaxAmountOfCargo;
             }
             else            
             {
-                currentAmountOfCargo += amountOfCargo;
+                CurrentAmountOfCargo += amountOfCargo;
                 Console.WriteLine($"Airplane {PlaneIdentification} loads {amountOfCargo} tons cargo.");
             }
         }
-
+        //unloads the plane if it has landed
         public override void Unload()
         {
             if(IsCurrentlyFlying)
@@ -43,12 +46,13 @@ namespace AirportAssgnmnt.Models
                 Console.WriteLine("Cargo plane cannot be unloaded while flying");
                 return;
             }
-            Console.WriteLine($"Airplane {PlaneIdentification} unloads {currentAmountOfCargo} tons cargo.");
-            currentAmountOfCargo = 0;
+            Console.WriteLine($"Airplane {PlaneIdentification} unloads {CurrentAmountOfCargo} tons cargo.");
+            CurrentAmountOfCargo = 0;
         }
+        //checks if the plane has space for loading
         public override bool HasRooms()
         {
-            if (currentAmountOfCargo < MaxAmountOfCargo)
+            if (CurrentAmountOfCargo < MaxAmountOfCargo)
             {
                 return true;
             }
@@ -57,10 +61,10 @@ namespace AirportAssgnmnt.Models
                 return false;
             }
         }
-
+        //returns the amount of available spaces
         public override int GetRooms()
         {
-            return MaxAmountOfCargo - currentAmountOfCargo;
+            return MaxAmountOfCargo - CurrentAmountOfCargo;
         }
 
         public void TightenPropellor()

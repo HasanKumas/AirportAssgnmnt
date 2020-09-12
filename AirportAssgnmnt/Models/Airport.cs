@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AirportAssgnmnt.Exceptions;
+using System;
 using System.Collections.Generic;
 
 namespace AirportAssgnmnt.Models
@@ -7,7 +8,11 @@ namespace AirportAssgnmnt.Models
     {
         private string airportName;
         private List<Airplane> airplanes;
-
+        
+        /*creates an airport with the specified name
+         * adds 3 people, 2 cargo and 1 space plane to
+         * the airplanes list by default
+         * */
         public Airport(string airportName)
         {
             this.airportName = airportName;
@@ -19,6 +24,11 @@ namespace AirportAssgnmnt.Models
             airplanes.Add(new CargoPlane("PLA166"));
             airplanes.Add(new SpacePlane("SPC777"));
         }
+        /*adds an airplane to the airport
+         *parameters:
+         *name for the plane identification,
+         *type for airplane type
+         */
         public void AddAirplane(string name, AirplaneTypes type)
         {
             switch (type)
@@ -34,6 +44,7 @@ namespace AirportAssgnmnt.Models
                     break;
             }
         }
+        //shows all the airplanes of the airport
         public void ShowAirplanes()
         {
             Console.WriteLine($"Aircrafts from airport {airportName}:");
@@ -42,6 +53,8 @@ namespace AirportAssgnmnt.Models
                 Console.WriteLine(airplane);
             }
         }
+        /*shows only available airplanes which 
+         * has rooms for load and do not currently fly*/
         public void ShowAvailableAirplanes()
         {
             Console.WriteLine("Available airplanes at the airport:");
@@ -53,9 +66,21 @@ namespace AirportAssgnmnt.Models
                 }
             }
         }
+        /*returns the requested airplane if available and
+         * shows information about the requested plane*/
         public Airplane RequestPlane(string name)
         {
-            var aplane = FindAirplane(name);
+                var aplane = FindAirplane(name);
+            try
+            {
+                if (aplane is null)
+                    throw new NullReturnException();
+            }
+            catch(NullReturnException ex)
+            {
+                Console.WriteLine("A null is returned: " + ex);
+                return null;
+            }
             if (!aplane.IsCurrentlyFlying && aplane.HasRooms())
             {
                 switch (aplane.Type)
@@ -74,10 +99,10 @@ namespace AirportAssgnmnt.Models
             else
             {
                 Console.WriteLine($"Airplane {aplane.PlaneIdentification} is not available at the moment.");
+                return null;
             }
-            return null;
         }
-
+        //finds and returns requested airplane
         private Airplane FindAirplane(string name)
         {
             foreach (var aplane in airplanes)

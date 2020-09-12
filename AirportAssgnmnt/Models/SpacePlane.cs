@@ -12,6 +12,8 @@ namespace AirportAssgnmnt.Models
             Type = AirplaneTypes.SPACE;
             MaxAmountOfRockets = 10;
         }
+        /*loads the plane with the specified amount by 
+         * checking if the current load exceeds the max load*/
         public override void Load(int amountOfRockets)
         {
             if (currentAmountOfRockets + amountOfRockets > MaxAmountOfRockets)
@@ -27,7 +29,7 @@ namespace AirportAssgnmnt.Models
                 Console.WriteLine($"Airplane {PlaneIdentification} loads {amountOfRockets} rockets.");
             }
         }
-
+        //unloads the plane if it has landed
         public override void Unload()
         {
             if (IsCurrentlyFlying)
@@ -38,6 +40,7 @@ namespace AirportAssgnmnt.Models
             Console.WriteLine($"Airplane {PlaneIdentification} unloads {currentAmountOfRockets} rockets.");
             currentAmountOfRockets = 0;
         }
+        //checks if the plane has space for loading
         public override bool HasRooms()
         {
             if (currentAmountOfRockets < MaxAmountOfRockets)
@@ -49,7 +52,7 @@ namespace AirportAssgnmnt.Models
                 return false;
             }
         }
-
+        //returns the amount of available spaces
         public override int GetRooms()
         {
             return MaxAmountOfRockets - currentAmountOfRockets;
